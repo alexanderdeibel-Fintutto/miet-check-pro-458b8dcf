@@ -1,11 +1,40 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import Stripe from 'https://esm.sh/stripe@14.21.0?target=deno'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0'
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
+
+// Allowed URL origins for redirect validation
+const ALLOWED_ORIGINS = [
+  'https://id-preview--f670eb17-7447-4598-9c5c-22e76824e973.lovable.app',
+  'https://fintutto.de',
+  'https://www.fintutto.de',
+  'http://localhost:5173',
+  'http://localhost:3000',
+]
+
+// Input validation schema
+const CheckoutSchema = z.object({
+  priceId: z.string()
+    .min(1, 'priceId is required')
+    .regex(/^price_[a-zA-Z0-9]+$/, 'Invalid priceId format'),
+  successUrl: z.string()
+    .url('successUrl must be a valid URL')
+    .refine(
+      (url) => ALLOWED_ORIGINS.some(origin => url.startsWith(origin)),
+      'successUrl must be from an allowed origin'
+    ),
+  cancelUrl: z.string()
+    .url('cancelUrl must be a valid URL')
+    .refine(
+      (url) => ALLOWED_ORIGINS.some(origin => url.startsWith(origin)),
+      'cancelUrl must be from an allowed origin'
+    ),
+})
 
 serve(async (req) => {
   // Handle CORS preflight
@@ -49,14 +78,20 @@ serve(async (req) => {
     }
 
     const user = claimsData.user
-    const { priceId, successUrl, cancelUrl } = await req.json()
-
-    if (!priceId || !successUrl || !cancelUrl) {
+    
+    // Parse and validate input
+    const rawInput = await req.json()
+    const parseResult = CheckoutSchema.safeParse(rawInput)
+    
+    if (!parseResult.success) {
+      const errorMessages = parseResult.error.errors.map(e => e.message).join(', ')
       return new Response(
-        JSON.stringify({ error: 'Missing required fields: priceId, successUrl, cancelUrl' }),
+        JSON.stringify({ error: `Invalid input: ${errorMessages}` }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
+
+    const { priceId, successUrl, cancelUrl } = parseResult.data
 
     // Check for existing customer
     const customers = await stripe.customers.list({
