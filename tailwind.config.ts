@@ -69,12 +69,11 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        yield: {
-          excellent: "hsl(var(--yield-excellent))",
-          good: "hsl(var(--yield-good))",
-          ok: "hsl(var(--yield-ok))",
-          weak: "hsl(var(--yield-weak))",
-          bad: "hsl(var(--yield-bad))",
+        status: {
+          valid: "hsl(var(--status-valid))",
+          invalid: "hsl(var(--status-invalid))",
+          unclear: "hsl(var(--status-unclear))",
+          info: "hsl(var(--status-info))",
         },
       },
       borderRadius: {
