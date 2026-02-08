@@ -7,6 +7,15 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
+// Allowed URL origins for redirect validation
+const ALLOWED_ORIGINS = [
+  'https://id-preview--f670eb17-7447-4598-9c5c-22e76824e973.lovable.app',
+  'https://fintutto.de',
+  'https://www.fintutto.de',
+  'http://localhost:5173',
+  'http://localhost:3000',
+]
+
 serve(async (req) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
@@ -51,9 +60,17 @@ serve(async (req) => {
     const user = claimsData.user
     const { returnUrl } = await req.json()
 
-    if (!returnUrl) {
+    if (!returnUrl || typeof returnUrl !== 'string') {
       return new Response(
         JSON.stringify({ error: 'Missing required field: returnUrl' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    // Validate returnUrl against allowed origins
+    if (!ALLOWED_ORIGINS.some(origin => returnUrl.startsWith(origin))) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid return URL' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
