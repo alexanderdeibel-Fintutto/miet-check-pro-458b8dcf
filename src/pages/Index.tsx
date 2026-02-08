@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import heroGradient from '@/assets/gamma-bg-vermieter-horizontal-4k.png';
 import { Header } from '@/components/Header';
 import { CheckInputs } from '@/components/schoenheitsreparaturen/CheckInputs';
 import { CheckResults } from '@/components/schoenheitsreparaturen/CheckResults';
@@ -26,7 +27,10 @@ const Index = () => {
       <Header />
 
       {/* Hero Section */}
-      <div className="gradient-primary text-white py-8 px-4">
+      <div
+        className="text-white py-8 px-4 bg-cover bg-center"
+        style={{ backgroundImage: `url(${heroGradient})` }}
+      >
         <div className="container">
           <div className="flex items-center gap-3 mb-2">
             <Scale className="h-8 w-8" />
