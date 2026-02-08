@@ -1,6 +1,7 @@
 import { Moon, Sun, LogIn, LogOut, Scale, FolderOpen, CreditCard, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
+import fintuttoLogo from '@/assets/fintutto-rechner-logo.svg';
 import { Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import {
@@ -52,8 +53,7 @@ export const Header = ({ onLoginClick }: HeaderProps) => {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <Scale className="h-6 w-6 text-primary" />
-          <span className="text-xl font-bold">Mietrecht-Check</span>
+          <img src={fintuttoLogo} alt="Fintutto Rechner" className="h-8" />
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">
