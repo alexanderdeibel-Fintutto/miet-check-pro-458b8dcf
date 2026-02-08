@@ -2,6 +2,7 @@ import { Moon, Sun, LogIn, LogOut, Scale, FolderOpen, CreditCard, Settings } fro
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import fintuttoLogo from '@/assets/fintutto-rechner-logo.svg';
+import heroGradient from '@/assets/gamma-bg-vermieter-horizontal-4k.png';
 import { Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import {
@@ -50,7 +51,10 @@ export const Header = ({ onLoginClick }: HeaderProps) => {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header
+      className="sticky top-0 z-50 w-full bg-cover bg-center text-white"
+      style={{ backgroundImage: `url(${heroGradient})` }}
+    >
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
           <img src={fintuttoLogo} alt="Fintutto Rechner" className="h-8" />
@@ -59,8 +63,8 @@ export const Header = ({ onLoginClick }: HeaderProps) => {
         <nav className="hidden md:flex items-center gap-6">
           <Link
             to="/"
-            className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
-              location.pathname === '/' ? 'text-primary' : 'text-muted-foreground'
+            className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-white ${
+              location.pathname === '/' ? 'text-white' : 'text-white/70'
             }`}
           >
             <Scale className="h-4 w-4" />
@@ -69,8 +73,8 @@ export const Header = ({ onLoginClick }: HeaderProps) => {
           {user && (
             <Link
               to="/berechnungen"
-              className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
-                location.pathname === '/berechnungen' ? 'text-primary' : 'text-muted-foreground'
+              className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-white ${
+                location.pathname === '/berechnungen' ? 'text-white' : 'text-white/70'
               }`}
             >
               <FolderOpen className="h-4 w-4" />
@@ -79,8 +83,8 @@ export const Header = ({ onLoginClick }: HeaderProps) => {
           )}
           <Link
             to="/pricing"
-            className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
-              location.pathname === '/pricing' ? 'text-primary' : 'text-muted-foreground'
+            className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-white ${
+              location.pathname === '/pricing' ? 'text-white' : 'text-white/70'
             }`}
           >
             <CreditCard className="h-4 w-4" />
@@ -89,14 +93,14 @@ export const Header = ({ onLoginClick }: HeaderProps) => {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" onClick={toggleDarkMode}>
+          <Button variant="ghost" size="icon" onClick={toggleDarkMode} className="text-white hover:bg-white/20 hover:text-white">
             {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </Button>
 
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className="border-white/30 text-white hover:bg-white/20 hover:text-white">
                   <Settings className="h-4 w-4 mr-2" />
                   <span className="hidden sm:inline max-w-32 truncate">
                     {user.email}
@@ -128,7 +132,7 @@ export const Header = ({ onLoginClick }: HeaderProps) => {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : onLoginClick ? (
-            <Button onClick={onLoginClick} size="sm">
+            <Button onClick={onLoginClick} size="sm" className="bg-white/20 text-white hover:bg-white/30 border border-white/30">
               <LogIn className="h-4 w-4 mr-2" />
               Anmelden
             </Button>
